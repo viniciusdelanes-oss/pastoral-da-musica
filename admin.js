@@ -635,6 +635,8 @@ if (!repertorio) {
       for (const entrada of entradas) {
         if (entrada.directory) continue;
         const nomeCompleto = entrada.filename;
+        const caminho = nomeCompleto.toUpperCase();
+const ehPartitura = caminho.includes('PARTITURA');
        
 
       const nome = entrada.filename.split('/').pop();
