@@ -687,7 +687,11 @@ $('analisar-zip').onclick = () => run(async () => {
       for (const [numero, item] of grupos.entries()) {
         const titulo = item.tituloAudio || item.tituloPDF || 'SEM TÍTULO';
 
-        if (item.audios.length > 1 || item.pdfs.length > 1 || item.partituras.length > 1) {
+      if (
+  item.audios.length > 1 ||
+  new Set(item.pdfs).size > 1 ||
+  item.partituras.length > 1
+) {
           detalhes.push(
             `Nº ${numero} - DUPLICIDADE: CONFERIR MANUALMENTE\n` +
             `Título: ${titulo}\n` +
