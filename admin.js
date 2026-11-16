@@ -7,7 +7,20 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const $ = id => document.getElementById(id);
 const form = $('musica');
-const momentos = ['Entrada','Ato penitencial','Glória','Salmo','Aclamação','Ofertório','Santo','Cordeiro de Deus','Comunhão','Final'];
+const momentos = [
+  'Refrão orante inicial',
+  'Entrada',
+  'Ato penitencial',
+  'Glória',
+  'Liturgia da Palavra',
+  'Salmo',
+  'Aclamação',
+  'Ofertório',
+  'Santo',
+  'Cordeiro de Deus',
+  'Comunhão',
+  'Final'
+];
 
 form.elements.momento.innerHTML = momentos.map(m => `<option>${m}</option>`).join('');
 
