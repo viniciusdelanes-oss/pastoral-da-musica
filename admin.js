@@ -777,6 +777,7 @@ $('analisar-zip').onclick = () => run(async () => {
     `\nTOTAL DE ÁUDIOS: ${totalAudios}` +
     `\nTOTAL DE CIFRAS WORD: ${totalPDFs}` +
     `\nTOTAL DE PARTITURAS PDF: ${totalPartituras}`;
+  $('importar-musicas-zip').disabled = loteImportacao.length === 0;
 });
 
 $('importar-musicas-zip').onclick = () => {
