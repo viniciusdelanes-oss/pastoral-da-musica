@@ -608,9 +608,11 @@ const arquivos = document.getElementById('arquivos-zip').files;
           continue;
         }
 
-        const titulo = nome.slice(0, -(extensao.length + 1))
-          .trim()
-          .toLocaleLowerCase('pt-BR');
+       const correspondencia = nome.match(/^\s*(\d+)/);
+
+if (!correspondencia) continue;
+
+const titulo = correspondencia[1].padStart(2, '0');
 
         if (!grupos.has(titulo)) {
           grupos.set(titulo, { audio: false, pdf: false });
