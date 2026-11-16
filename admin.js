@@ -627,6 +627,7 @@ $('analisar-zip').onclick = () => run(async () => {
   let totalPDFs = 0;
   let totalPartituras = 0;
   let totalPares = 0;
+  let totalPDFs = 0;
 
   for (const zip of arquivos) {
     const reader = new ZipReader(new BlobReader(zip));
