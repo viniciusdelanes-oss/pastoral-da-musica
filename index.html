@@ -199,19 +199,58 @@ document.getElementById('busca').addEventListener('input',()=>{pararPlayers();de
 
 desenharLista();desenharRepertorio();desenharBiblioteca();
 
+
 async function carregarConteudoOnline(){
   try{
-    const response=await fetch('/api/repertorios',{cache:'no-store'});
-    if(!response.ok)throw new Error();
-    const rows=await response.json();
-    REPERTORIOS.splice(0,REPERTORIOS.length,...rows.map(r=>({ ...r, musicas:r.musicas.reduce((m,s)=>{(m[s.momento]??=[]).push(s);return m},{}) })));
+    const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+
+    const supabaseClient = createClient(
+      'https://gnsohfohcjaolfyxmpsw.supabase.co',
+      'sb_publishable_F5WPlc--Rxyxn-YIC1H5VA_q5o6Hc12'
+    );
+
+    const [{data:celebracoes,error:erroCelebracoes},{data:musicas,error:erroMusicas}] = await Promise.all([
+      supabaseClient.from('site_celebracoes').select('*').order('data'),
+      supabaseClient.from('site_musicas').select('*')
+    ]);
+
+    if(erroCelebracoes) throw erroCelebracoes;
+    if(erroMusicas) throw erroMusicas;
+
+    const rows = (celebracoes || []).map(r => ({
+      ...r,
+      musicas: (musicas || [])
+        .filter(s => s.repertorio === r.id)
+        .reduce((m,s) => {
+          (m[s.momento] ??= []).push({
+            ...s,
+            cifraTexto: s.cifra_texto || ''
+          });
+          return m;
+        }, {})
+    }));
+
+    REPERTORIOS.splice(0,REPERTORIOS.length,...rows);
+
     proximas=REPERTORIOS.filter(r=>parse(r.data)>=hoje).sort((a,b)=>parse(a.data)-parse(b.data));
     anteriores=REPERTORIOS.filter(r=>parse(r.data)<hoje).sort((a,b)=>parse(b.data)-parse(a.data));
     atual=(proximas[0]||anteriores[0]||{}).data;
-    desenharLista();desenharRepertorio();desenharBiblioteca();
-  }catch{document.getElementById('biblioteca-lista').insertAdjacentHTML('afterbegin','<p role="status">Não foi possível carregar as atualizações. <button class="txtbtn" onclick="this.parentElement.remove();carregarConteudoOnline()">Tentar novamente</button></p>')}
+
+    desenharLista();
+    desenharRepertorio();
+    desenharBiblioteca();
+
+  }catch(error){
+    console.error('Erro Supabase:',error);
+    document.getElementById('biblioteca-lista').insertAdjacentHTML(
+      'afterbegin',
+      '<p role="status">Não foi possível carregar as atualizações. <button class="txtbtn" onclick="this.parentElement.remove();carregarConteudoOnline()">Tentar novamente</button></p>'
+    );
+  }
 }
+
 carregarConteudoOnline();
+;
 </script>
 </body>
 </html>
