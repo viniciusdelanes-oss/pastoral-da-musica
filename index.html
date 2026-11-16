@@ -209,7 +209,6 @@ document.addEventListener('click',e=>{
 document.getElementById('busca').addEventListener('input',()=>{pararPlayers();desenharBiblioteca()});
 
 desenharLista();desenharRepertorio();desenharBiblioteca();
- const listaNoticias = Array.isArray(noticias) ? noticias : [];
 
 
 
@@ -236,6 +235,7 @@ async function carregarConteudoOnline(){
     if(erroCelebracoes) throw erroCelebracoes;
     if(erroMusicas) throw erroMusicas;
    if(erroNoticias) throw erroNoticias;
+   const listaNoticias = Array.isArray(noticias) ? noticias : [];
 
     const rows = (celebracoes || []).map(r => ({
       ...r,
