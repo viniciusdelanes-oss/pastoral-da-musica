@@ -333,6 +333,136 @@ $('abrir-personalizacao').onclick $('abrir-noticias').onclick = () => {
     painel.scrollIntoView({ behavior: 'smooth' });
   }
 };
+
+// GERENCIAMENTO DE NOTÍCIAS
+
+const formNoticia = $('form-noticia');
+
+function escaparHTML(valor) {
+  return String(valor ?? '').replace(/[&<>"']/g, caractere => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[caractere]);
+}
+
+async function carregarNoticias() {
+  const { data, error } = await supabase
+    .from('site_noticias')
+    .select('*')
+    .order('ordem', { ascending: true })
+    .order('data_publicacao', { ascending: false });
+
+  if (error) throw error;
+
+  $('lista-noticias').innerHTML = data.length
+    ? data.map(n => `
+      <div class="panel" style="margin-bottom:12px">
+        <strong>${escaparHTML(n.titulo)}</strong>
+        <p>${escaparHTML(n.data_publicacao || '')} · ${escaparHTML(n.tamanho)} · ${n.publicado ? 'Publicado' : 'Rascunho'}</p>
+        <button class="btn secondary" type="button" data-editar-noticia="${n.id}">Editar</button>
+        <button class="btn perigo" type="button" data-excluir-noticia="${n.id}">Excluir</button>
+      </div>
+    `).join('')
+    : '<p>Nenhuma notícia cadastrada ainda.</p>';
+}
+
+$('abrir-noticias').addEventListener('click', () => {
+  run(async () => {
+    await carregarNoticias();
+  });
+});
+
+formNoticia.onsubmit = e => {
+  e.preventDefault();
+
+  run(async () => {
+    const body = Object.fromEntries(new FormData(formNoticia));
+
+    const registro = {
+      titulo: body.titulo,
+      subtitulo: body.subtitulo || '',
+      conteudo: body.conteudo || '',
+      imagem_capa: body.imagem_capa || '',
+      data_publicacao: body.data_publicacao || null,
+      tamanho: body.tamanho,
+      ordem: Number(body.ordem) || 0,
+      publicado: formNoticia.elements.publicado.checked
+    };
+
+    let resultado;
+
+    if (body.id) {
+      resultado = await supabase
+        .from('site_noticias')
+        .update(registro)
+        .eq('id', body.id);
+    } else {
+      resultado = await supabase
+        .from('site_noticias')
+        .insert(registro);
+    }
+
+    if (resultado.error) throw resultado.error;
+
+    formNoticia.reset();
+    formNoticia.elements.id.value = '';
+    await carregarNoticias();
+    message('Notícia salva com sucesso.');
+  });
+};
+
+$('lista-noticias').onclick = e => {
+  const editar = e.target.closest('[data-editar-noticia]');
+  const excluir = e.target.closest('[data-excluir-noticia]');
+
+  if (editar) {
+    run(async () => {
+      const { data, error } = await supabase
+        .from('site_noticias')
+        .select('*')
+        .eq('id', editar.dataset.editarNoticia)
+        .single();
+
+      if (error) throw error;
+
+      for (const campo of [
+        'id', 'titulo', 'subtitulo', 'conteudo',
+        'imagem_capa', 'data_publicacao',
+        'tamanho', 'ordem'
+      ]) {
+        formNoticia.elements[campo].value = data[campo] ?? '';
+      }
+
+      formNoticia.elements.publicado.checked = data.publicado;
+      formNoticia.scrollIntoView({ behavior: 'smooth' });
+      message('Editando notícia. Faça as alterações e salve.');
+    });
+  }
+
+  if (excluir && confirm('Deseja excluir esta notícia?')) {
+    run(async () => {
+      const { error } = await supabase
+        .from('site_noticias')
+        .delete()
+        .eq('id', excluir.dataset.excluirNoticia);
+
+      if (error) throw error;
+
+      await carregarNoticias();
+      message('Notícia excluída.');
+    });
+  }
+};
+
+formNoticia.onreset = () => {
+  setTimeout(() => {
+    formNoticia.elements.id.value = '';
+  }, 0);
+};
+
 access().catch(error => {
   console.error(error);
   message('Erro ao verificar acesso: ' + error.message, true);
