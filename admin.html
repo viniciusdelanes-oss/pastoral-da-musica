@@ -31,6 +31,56 @@
 </form></div></div>
 </section>
 <noscript>Ative o JavaScript para entrar e editar as músicas.</noscript>
+  <section class="panel" id="personalizar-site" hidden>
+  <div class="eyebrow">Identidade visual e conteúdo</div>
+  <h2>Personalizar o site</h2>
+  <p>Edite os textos, as imagens e a aparência da página da Pastoral da Música.</p>
+
+  <form id="form-site">
+    <h3>Página inicial</h3>
+    <label>Subtítulo
+      <input name="hero_subtitulo" type="text">
+    </label>
+    <label>Título principal
+      <input name="hero_titulo" type="text">
+    </label>
+    <label>Descrição
+      <textarea name="hero_descricao" rows="3"></textarea>
+    </label>
+
+    <h3>Sobre a pastoral</h3>
+    <label>Título da seção
+      <input name="sobre_titulo" type="text">
+    </label>
+    <label>Subtítulo
+      <input name="sobre_subtitulo" type="text">
+    </label>
+    <label>Texto da seção
+      <textarea name="sobre_texto" rows="6"></textarea>
+    </label>
+
+    <h3>Aparência</h3>
+    <label>Cor principal
+      <input name="cor_principal" type="color" value="#183d32">
+    </label>
+    <label>Cor secundária
+      <input name="cor_secundaria" type="color" value="#245344">
+    </label>
+    <label>Cor de destaque
+      <input name="cor_destaque" type="color" value="#c8a45d">
+    </label>
+    <label>Endereço da imagem do logotipo
+      <input name="logo_url" type="url" placeholder="https://...">
+    </label>
+    <label>Endereço da imagem de destaque
+      <input name="imagem_destaque" type="url" placeholder="https://...">
+    </label>
+
+    <div class="botoes">
+      <button class="btn" type="submit">Salvar personalizações</button>
+    </div>
+  </form>
+</section>
 </main>
 <footer>PASTORAL DA MÚSICA · Paróquia Sagrada Família</footer>
 <script type="module" src="/admin.js"></script>
