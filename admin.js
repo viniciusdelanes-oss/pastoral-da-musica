@@ -578,7 +578,7 @@ access().catch(error => {
 });
 
 $('analisar-zip').onclick = () => run(async () => {
-  const arquivos = $('arquivos-zip').files;
+const arquivos = document.getElementById('arquivos-zip').files;
   if (!arquivos.length) {
     throw new Error('Selecione pelo menos um arquivo ZIP.');
   }
