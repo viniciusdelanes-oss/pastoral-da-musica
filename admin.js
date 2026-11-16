@@ -589,6 +589,23 @@ access().catch(error => {
 });
 
 $('analisar-zip').onclick = () => run(async () => {
+  function identificarMomento(nome) {
+  const texto = nome.normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase();
+
+  if (texto.includes('ENTRADA')) return 'Entrada';
+  if (texto.includes('OFERT')) return 'Ofertório';
+  if (texto.includes('COMUNHAO')) return 'Comunhão';
+  if (texto.includes('SALMO')) return 'Salmo';
+  if (texto.includes('ALELUIA') || texto.includes('ACLAMACAO')) return 'Aclamação';
+  if (texto.includes('SANTO')) return 'Santo';
+  if (texto.includes('CORDEIRO')) return 'Cordeiro de Deus';
+  if (texto.includes('GLORIA')) return 'Glória';
+  if (texto.includes('PENITENCIAL')) return 'Ato penitencial';
+
+  return 'Liturgia da Palavra';
+}
 const arquivos = document.getElementById('arquivos-zip').files;
   if (!arquivos.length) {
     throw new Error('Selecione pelo menos um arquivo ZIP.');
