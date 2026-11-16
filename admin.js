@@ -588,30 +588,33 @@ access().catch(error => {
   message('Erro ao verificar acesso: ' + error.message, true);
 });
 
+
 $('analisar-zip').onclick = () => run(async () => {
   function identificarMomento(nome) {
-  const texto = nome.normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toUpperCase();
+    const texto = nome.normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toUpperCase();
 
-  if (texto.includes('ENTRADA')) return 'Entrada';
-if (texto.includes('OFEREND') || texto.includes('OFERT')) return 'Ofertório';
-  if (texto.includes('COMUNHAO')) return 'Comunhão';
-  if (texto.includes('SALMO')) return 'Salmo';
-  if (texto.includes('ALELUIA') || texto.includes('ACLAMACAO')) return 'Aclamação';
-  if (texto.includes('SANTO')) return 'Santo';
-  if (texto.includes('CORDEIRO')) return 'Cordeiro de Deus';
-  if (texto.includes('GLORIA')) return 'Glória';
-  if (texto.includes('PENITENCIAL')) return 'Ato penitencial';
+    if (texto.includes('ENTRADA')) return 'Entrada';
+    if (texto.includes('OFEREND') || texto.includes('OFERT')) return 'Ofertório';
+    if (texto.includes('COMUNHAO')) return 'Comunhão';
+    if (texto.includes('SALMO')) return 'Salmo';
+    if (texto.includes('ALELUIA') || texto.includes('ACLAMACAO')) return 'Aclamação';
+    if (texto.includes('SANTO')) return 'Santo';
+    if (texto.includes('CORDEIRO')) return 'Cordeiro de Deus';
+    if (texto.includes('GLORIA')) return 'Glória';
+    if (texto.includes('PENITENCIAL')) return 'Ato penitencial';
 
-  return 'Liturgia da Palavra';
-}
-const arquivos = document.getElementById('arquivos-zip').files;
+    return 'Liturgia da Palavra';
+  }
+
+  const arquivos = $('arquivos-zip').files;
   const repertorio = $('importar-repertorio').value;
 
-if (!repertorio) {
-  throw new Error('Selecione a celebração de destino.');
-}
+  if (!repertorio) {
+    throw new Error('Selecione a celebração de destino.');
+  }
+
   if (!arquivos.length) {
     throw new Error('Selecione pelo menos um arquivo ZIP.');
   }
@@ -621,6 +624,7 @@ if (!repertorio) {
 
   let relatorio = [];
   let totalAudios = 0;
+  let totalPDFs = 0;
   let totalPartituras = 0;
   let totalPares = 0;
 
@@ -630,110 +634,131 @@ if (!repertorio) {
     try {
       const entradas = await reader.getEntries();
       const grupos = new Map();
-    
 
       for (const entrada of entradas) {
         if (entrada.directory) continue;
+
         const nomeCompleto = entrada.filename;
         const caminho = nomeCompleto.toUpperCase();
-const ehPartitura = caminho.includes('PARTITURA');
-       
+        const ehPartitura = caminho.includes('PARTITURA');
 
-      const nome = entrada.filename.split('/').pop();
+        const nome = nomeCompleto.split('/').pop();
 
-const tituloArquivo = nome
-  .replace(/\.[^.]+$/, '')
-  .replace(/^\s*\d+[\s._-]*/, '')
-  .trim();
+        const extensao = nome.split('.').pop().toLowerCase();
 
-
-const extensao = nome.split('.').pop().toLowerCase();
-
-        if (!['mp3','m4a','wav','ogg','pdf'].includes(extensao)) {
+        if (!['mp3', 'm4a', 'wav', 'ogg', 'pdf'].includes(extensao)) {
           continue;
         }
 
-     const correspondencia = nome.match(/(\d+)/);
+        const correspondencia = nome.match(/(\d+)/);
+        if (!correspondencia) continue;
 
-if (!correspondencia) continue;
+        const numero = correspondencia[1].padStart(2, '0');
 
-const titulo = correspondencia[1].padStart(2, '0');
+        const tituloArquivo = nome
+          .replace(/\.[^.]+$/, '')
+          .replace(/^\s*\d+[\s._-]*/, '')
+          .trim();
 
-    if (!grupos.has(titulo)) {
-grupos.set(titulo, {
-  audios: [],
-  pdfs: [],
-  partituras: [],
-  tituloAudio: '',
-  tituloPDF: ''
-});
-}
+        if (!grupos.has(numero)) {
+          grupos.set(numero, {
+            audios: [],
+            pdfs: [],
+            partituras: [],
+            tituloAudio: '',
+            tituloPDF: ''
+          });
+        }
 
-if (tituloArquivo) {
-  if (extensao === 'pdf' && !grupos.get(titulo).tituloPDF) {
-    grupos.get(titulo).tituloPDF = tituloArquivo;
-  }
+        const item = grupos.get(numero);
 
-  if (extensao !== 'pdf' && !grupos.get(titulo).tituloAudio) {
-    grupos.get(titulo).tituloAudio = tituloArquivo;
-  }
-}
+        if (extensao === 'pdf') {
+          if (ehPartitura) {
+            item.partituras.push(nome);
+            totalPartituras++;
+          } else {
+            item.pdfs.push(nome);
+            totalPDFs++;
 
-if (extensao === 'pdf') {
-  if (ehPartitura) {
-    grupos.get(titulo).partituras.push(nome);
-    totalPartituras++;
-  } else {
-    grupos.get(titulo).pdfs.push(nome);
-  }
-  totalPDFs++;
-} else {
-  grupos.get(titulo).audios.push(nome);
-  totalAudios++;
-}
+            if (!item.tituloPDF) {
+              item.tituloPDF = tituloArquivo;
+            }
+          }
+        } else {
+          item.audios.push(nome);
+          totalAudios++;
+
+          if (!item.tituloAudio) {
+            item.tituloAudio = tituloArquivo;
+          }
+        }
       }
 
-   let pares = 0;
-let semAudio = 0;
-let semPDF = 0;
+      let pares = 0;
+      let semAudio = 0;
+      let semPDF = 0;
+      let detalhes = [];
 
-let detalhes = [];
+      for (const [numero, item] of grupos.entries()) {
+        const titulo = item.tituloAudio || item.tituloPDF || 'SEM TÍTULO';
 
-for (const [numero, item] of grupos.entries()) {
-  if (item.audios.length > 1 || item.pdfs.length > 1) {
-    detalhes.push(
-      `Nº ${numero} - DUPLICIDADE: CONFERIR MANUALMENTE\n` +
-      `Áudios: ${item.audios.join(', ') || 'Nenhum'}\n` +
-      `PDFs: ${item.pdfs.join(', ') || 'Nenhum'}`
-    );
- } else if (item.audios.length === 1 && item.pdfs.length === 1) {
-  pares++;
-  detalhes.push(
-    `Nº ${numero} - ${item.tituloAudio || item.tituloPDF || 'SEM TÍTULO'} - PAR ENCONTRADO\n` +
-    `Áudio: ${item.audios[0]}\nPDF: ${item.pdfs[0]}`
-  );
-} else if (item.pdfs.length === 1) {
-  semAudio++;
-  detalhes.push(
-    `Nº ${numero} - ${item.tituloAudio || item.tituloPDF || 'SEM TÍTULO'} - PDF SEM ÁUDIO\nPDF: ${item.pdfs[0]}`
-  );
-} else if (item.audios.length === 1) {
-  semPDF++;
-  detalhes.push(
-    `Nº ${numero} - ${item.tituloAudio || item.tituloPDF || 'SEM TÍTULO'} - ÁUDIO SEM PDF\nÁudio: ${item.audios[0]}`
-  );
-}
-}
+        if (
+          item.audios.length > 1 ||
+          item.pdfs.length > 1 ||
+          item.partituras.length > 1
+        ) {
+          detalhes.push(
+            `Nº ${numero} - DUPLICIDADE: CONFERIR MANUALMENTE\n` +
+            `Título: ${titulo}\n` +
+            `Áudios: ${item.audios.join(', ') || 'Nenhum'}\n` +
+            `Cifras: ${item.pdfs.join(', ') || 'Nenhuma'}\n` +
+            `Partituras: ${item.partituras.join(', ') || 'Nenhuma'}`
+          );
+        } else if (item.audios.length === 1 && item.pdfs.length === 1) {
+          pares++;
+
+          detalhes.push(
+            `Nº ${numero} - ${titulo} - PAR ENCONTRADO\n` +
+            `Áudio: ${item.audios[0]}\n` +
+            `PDF: ${item.pdfs[0]}` +
+            (item.partituras.length
+              ? `\nPartitura: ${item.partituras[0]}`
+              : '')
+          );
+        } else if (item.pdfs.length === 1) {
+          semAudio++;
+
+          detalhes.push(
+            `Nº ${numero} - ${titulo} - PDF SEM ÁUDIO\n` +
+            `PDF: ${item.pdfs[0]}`
+          );
+        } else if (item.audios.length === 1) {
+          semPDF++;
+
+          detalhes.push(
+            `Nº ${numero} - ${titulo} - ÁUDIO SEM PDF\n` +
+            `Áudio: ${item.audios[0]}`
+          );
+        } else if (item.partituras.length === 1) {
+          detalhes.push(
+            `Nº ${numero} - ${titulo} - SOMENTE PARTITURA\n` +
+            `Partitura: ${item.partituras[0]}`
+          );
+        }
+      }
+
       totalPares += pares;
 
-     relatorio.push(
-  `${zip.name}\n` +
-  `Músicas identificadas: ${grupos.size}\n` +
-  `Pares de áudio e PDF: ${pares}\n` +
-  `PDFs sem áudio: ${semAudio}\n` +
-  `Áudios sem PDF: ${semPDF}\n\n` +
-  detalhes.join('\n\n')
-);
+      relatorio.push(
+        `${zip.name}\n` +
+        `Momento identificado: ${identificarMomento(zip.name)}\n` +
+        `Músicas identificadas: ${grupos.size}\n` +
+        `Pares de áudio e cifra: ${pares}\n` +
+        `Cifras sem áudio: ${semAudio}\n` +
+        `Áudios sem cifra: ${semPDF}\n\n` +
+        detalhes.join('\n\n')
+      );
+
     } finally {
       await reader.close();
     }
@@ -743,6 +768,6 @@ for (const [numero, item] of grupos.entries()) {
     relatorio.join('\n\n') +
     `\n\nTOTAL DE PARES: ${totalPares}` +
     `\nTOTAL DE ÁUDIOS: ${totalAudios}` +
-    `TOTAL DE PDFs: ${totalPDFs}` +
-`\nTOTAL DE PARTITURAS: ${totalPartituras}`;
+    `\nTOTAL DE CIFRAS (PDF): ${totalPDFs}` +
+    `\nTOTAL DE PARTITURAS: ${totalPartituras}`;
 });
