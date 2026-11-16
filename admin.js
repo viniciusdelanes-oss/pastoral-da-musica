@@ -318,7 +318,14 @@ $('excluir').onclick = () => {
     message('Música excluída.');
   });
 };
-$('abrir-personalizacao').onclick = () => {
+$('abrir-personalizacao').onclick $('abrir-noticias').onclick = () => {
+  const painel = $('gerenciar-noticias');
+  painel.hidden = !painel.hidden;
+
+  if (!painel.hidden) {
+    painel.scrollIntoView({ behavior: 'smooth' });
+  }
+};= () => {
   const painel = $('personalizar-site');
   painel.hidden = !painel.hidden;
 
