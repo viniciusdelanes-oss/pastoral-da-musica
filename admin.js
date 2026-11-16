@@ -607,6 +607,11 @@ if (texto.includes('OFEREND') || texto.includes('OFERT')) return 'Ofertório';
   return 'Liturgia da Palavra';
 }
 const arquivos = document.getElementById('arquivos-zip').files;
+  const repertorio = $('importar-repertorio').value;
+
+if (!repertorio) {
+  throw new Error('Selecione a celebração de destino.');
+}
   if (!arquivos.length) {
     throw new Error('Selecione pelo menos um arquivo ZIP.');
   }
