@@ -211,18 +211,7 @@ document.getElementById('busca').addEventListener('input',()=>{pararPlayers();de
 desenharLista();desenharRepertorio();desenharBiblioteca();
  const listaNoticias = Array.isArray(noticias) ? noticias : [];
 
-if(containerNoticias){
-  if(listaNoticias.length === 0){
-    containerNoticias.innerHTML = '<p>Nenhuma notícia publicada no momento.</p>';
-  } else {
-    containerNoticias.innerHTML = listaNoticias.map(n => `
-      <article style="padding:16px 0;border-bottom:1px solid var(--border)">
-        <h3>${n.titulo || 'Sem título'}</h3>
-        <p>${n.resumo || n.conteudo || ''}</p>
-      </article>
-    `).join('');
-  }
-}
+
 
 
 async function carregarConteudoOnline(){
