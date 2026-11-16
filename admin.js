@@ -318,7 +318,14 @@ $('excluir').onclick = () => {
     message('Música excluída.');
   });
 };
+$('abrir-personalizacao').onclick = () => {
+  const painel = $('personalizar-site');
+  painel.hidden = !painel.hidden;
 
+  if (!painel.hidden) {
+    painel.scrollIntoView({ behavior: 'smooth' });
+  }
+};
 access().catch(error => {
   console.error(error);
   message('Erro ao verificar acesso: ' + error.message, true);
