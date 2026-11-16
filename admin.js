@@ -595,7 +595,7 @@ $('analisar-zip').onclick = () => run(async () => {
     .toUpperCase();
 
   if (texto.includes('ENTRADA')) return 'Entrada';
-  if (texto.includes('OFERT')) return 'Ofertório';
+if (texto.includes('OFEREND') || texto.includes('OFERT')) return 'Ofertório';
   if (texto.includes('COMUNHAO')) return 'Comunhão';
   if (texto.includes('SALMO')) return 'Salmo';
   if (texto.includes('ALELUIA') || texto.includes('ACLAMACAO')) return 'Aclamação';
@@ -630,6 +630,10 @@ const arquivos = document.getElementById('arquivos-zip').files;
         if (entrada.directory) continue;
 
         const nome = entrada.filename.split('/').pop();
+        const tituloArquivo = nome
+  .replace(/\.[^.]+$/, '')
+  .replace(/^\s*\d+[\s._-]*/, '')
+  .trim();
         const extensao = nome.split('.').pop().toLowerCase();
 
         if (!['mp3','m4a','wav','ogg','pdf'].includes(extensao)) {
@@ -643,7 +647,10 @@ if (!correspondencia) continue;
 const titulo = correspondencia[1].padStart(2, '0');
 
       if (!grupos.has(titulo)) {
-  grupos.set(titulo, { audios: [], pdfs: [] });
+grupos.set(titulo, { audios: [], pdfs: [], tituloArquivo: '' });
+        if (tituloArquivo && !grupos.get(titulo).tituloArquivo) {
+  grupos.get(titulo).tituloArquivo = tituloArquivo;
+}
 }
 
 if (extensao === 'pdf') {
@@ -673,18 +680,18 @@ for (const [numero, item] of grupos.entries()) {
   } else if (item.audios.length === 1 && item.pdfs.length === 1) {
     pares++;
     detalhes.push(
-      `Nº ${numero} - PAR ENCONTRADO\n` +
+      `Nº ${numero} - ${item.tituloArquivo || 'SEM TÍTULO'} - PAR ENCONTRADO\n` +
       `Áudio: ${item.audios[0]}\nPDF: ${item.pdfs[0]}`
     );
   } else if (item.pdfs.length === 1) {
     semAudio++;
     detalhes.push(
-      `Nº ${numero} - PDF SEM ÁUDIO\nPDF: ${item.pdfs[0]}`
+     `Nº ${numero} - ${item.tituloArquivo || 'SEM TÍTULO'} - PDF SEM ÁUDIO\nPDF: ${item.pdfs[0]}`
     );
   } else if (item.audios.length === 1) {
     semPDF++;
     detalhes.push(
-      `Nº ${numero} - ÁUDIO SEM PDF\nÁudio: ${item.audios[0]}`
+    `Nº ${numero} - ${item.tituloArquivo || 'SEM TÍTULO'} - ÁUDIO SEM PDF\nÁudio: ${item.audios[0]}`
     );
   }
 }
