@@ -648,14 +648,14 @@ for (const [numero, item] of grupos.entries()) {
 
       totalPares += pares;
 
-      relatorio.push(
-        `${zip.name}\n` +
-        `Músicas identificadas: ${grupos.size}\n` +
-        `Pares de áudio e PDF: ${pares}\n` +
-        `PDFs sem áudio: ${semAudio}\n` +
-        `Áudios sem PDF: ${semPDF}`
-      );
-
+     relatorio.push(
+  `${zip.name}\n` +
+  `Músicas identificadas: ${grupos.size}\n` +
+  `Pares de áudio e PDF: ${pares}\n` +
+  `PDFs sem áudio: ${semAudio}\n` +
+  `Áudios sem PDF: ${semPDF}\n\n` +
+  detalhes.join('\n\n')
+);
     } finally {
       await reader.close();
     }
