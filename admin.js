@@ -630,6 +630,7 @@ if (!repertorio) {
     try {
       const entradas = await reader.getEntries();
       const grupos = new Map();
+      const arquivosExtraidos = [];
 
       for (const entrada of entradas) {
         if (entrada.directory) continue;
