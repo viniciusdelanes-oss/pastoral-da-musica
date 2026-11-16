@@ -1,5 +1,6 @@
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { ZipReader, BlobReader, BlobWriter } from 'https://esm.sh/@zip.js/zip.js@2.7.57';
 
 const SUPABASE_URL = 'https://gnsohfohcjaolfyxmpsw.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_F5WPlc--Rxyxn-YIC1H5VA_q5o6Hc12';
