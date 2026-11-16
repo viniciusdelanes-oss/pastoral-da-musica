@@ -648,8 +648,7 @@ let totalPares = 0;
 
         const extensao = nome.split('.').pop().toLowerCase();
 
-        if (!['mp3', 'm4a', 'wav', 'ogg', 'pdf'].includes(extensao)) {
-          continue;
+       if (!['mp3','m4a','wav','ogg','pdf','doc','docx'].includes(extensao)) continue;
         }
 
         const correspondencia = nome.match(/(\d+)/);
