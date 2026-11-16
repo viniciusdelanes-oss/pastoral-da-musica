@@ -643,14 +643,14 @@ if (!correspondencia) continue;
 const titulo = correspondencia[1].padStart(2, '0');
 
       if (!grupos.has(titulo)) {
-  grupos.set(titulo, { audio: null, pdf: null });
+  grupos.set(titulo, { audios: [], pdfs: [] });
 }
 
 if (extensao === 'pdf') {
-  grupos.get(titulo).pdf = nome;
+  grupos.get(titulo).pdfs.push(nome);
   totalPDFs++;
 } else {
-  grupos.get(titulo).audio = nome;
+  grupos.get(titulo).audios.push(nome);
   totalAudios++;
 }
       }
