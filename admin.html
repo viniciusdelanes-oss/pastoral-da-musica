@@ -88,6 +88,63 @@
     </div>
   </form>
 </section>
+  
+<section class="panel" id="gerenciar-noticias" hidden>
+  <div class="eyebrow">Comunicação da pastoral</div>
+  <h2>Gerenciar notícias</h2>
+  <p>Publique notícias, fotos e vídeos da Pastoral da Música.</p>
+
+  <form id="form-noticia">
+    <input type="hidden" name="id">
+
+    <label>Título da notícia
+      <input name="titulo" maxlength="200" required>
+    </label>
+
+    <label>Subtítulo
+      <input name="subtitulo" maxlength="300">
+    </label>
+
+    <label>Texto da notícia
+      <textarea name="conteudo" rows="8"></textarea>
+    </label>
+
+    <label>Link da imagem de capa
+      <input name="imagem_capa" type="url" placeholder="https://...">
+    </label>
+
+    <label>Data da publicação
+      <input name="data_publicacao" type="date">
+    </label>
+
+    <label>Tamanho da notícia
+      <select name="tamanho">
+        <option value="grande">Grande — destaque principal</option>
+        <option value="medio" selected>Médio — destaque secundário</option>
+        <option value="pequeno">Pequeno — notícia comum</option>
+      </select>
+    </label>
+
+    <label>Ordem de exibição
+      <input name="ordem" type="number" value="0">
+    </label>
+
+    <label>
+      <input name="publicado" type="checkbox" value="true">
+      Publicar no site
+    </label>
+
+    <div class="botoes">
+      <button class="btn" type="submit">Salvar notícia</button>
+      <button class="btn secondary" type="reset">Limpar formulário</button>
+    </div>
+  </form>
+
+  <hr>
+  <h3>Notícias cadastradas</h3>
+  <div id="lista-noticias"></div>
+</section>
+
 </main>
 <footer>PASTORAL DA MÚSICA · Paróquia Sagrada Família</footer>
 <script type="module" src="/admin.js"></script>
