@@ -689,7 +689,7 @@ $('analisar-zip').onclick = () => run(async () => {
 
       if (
   item.audios.length > 1 ||
-  new Set(item.pdfs).size > 1 ||
+ new Set(item.pdfs.map(nome => nome.trim().toLowerCase())).size > 1 ||
   item.partituras.length > 1
 ) {
           detalhes.push(
