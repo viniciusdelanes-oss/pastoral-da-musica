@@ -670,7 +670,6 @@ if (extensao === 'pdf') {
 
 for (const [numero, item] of grupos.entries()) {
   if (item.audios.length > 1 || item.pdfs.length > 1) {
-); 
   if (item.audios.length > 1 || item.pdfs.length > 1) {
     detalhes.push(
       `Nº ${numero} - DUPLICIDADE: CONFERIR MANUALMENTE\n` +
