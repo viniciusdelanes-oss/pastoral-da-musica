@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Administração | Pastoral da Música</title>
+<link rel="stylesheet" href="/site.css"><link rel="stylesheet" href="/admin.css">
+</head>
+<body>
+<header><div class="eyebrow" style="color:#e7cd91">Paróquia Sagrada Família</div><h1>Pastoral da Música</h1><nav><a href="/">← Voltar ao site</a><a href="#painel">Administração</a></nav></header>
+<main id="painel">
+<div class="section-head"><div><div class="eyebrow">Cuidar do repertório</div><h2>Área do administrador</h2><p>Cadastre músicas e prepare as próximas celebrações.</p></div><button class="btn secondary" id="sair" hidden>Sair da conta</button></div>
+<p id="status" role="status" aria-live="polite">Carregando acesso…</p>
+<section class="panel acesso" id="acesso">
+<form id="login"><h2>Entrar</h2><p>Use o e-mail convidado e a senha que você definiu para o site.</p><label>E-mail<input name="email" type="email" autocomplete="username" required></label><label>Senha<input name="password" type="password" autocomplete="current-password" required></label><div class="botoes"><button class="btn">Entrar</button><button class="btn secondary" type="button" id="recuperar">Esqueci minha senha</button></div></form>
+<form id="senha" hidden><h2>Definir senha</h2><label>Nova senha (mínimo de 10 caracteres)<input name="password" type="password" minlength="10" autocomplete="new-password" required></label><label>Confirmar senha<input name="confirm" type="password" minlength="10" autocomplete="new-password" required></label><button class="btn">Salvar senha</button></form>
+<p class="ajuda">O acesso é exclusivo para quem recebeu e aceitou um convite por e-mail. Não é necessário configurar funções na conta.</p>
+</section>
+<section id="editor" hidden>
+<div class="layout admin-layout">
+<aside class="panel"><div class="eyebrow">Celebrações</div><label>Escolha o repertório<select id="repertorios"></select></label><button id="nova-musica" class="btn" type="button">Adicionar música</button><h3>Músicas desta celebração</h3><div id="lista-musicas"></div><button class="btn secondary" id="recarregar" type="button">Recarregar lista</button><hr><form id="celebracao"><h3>Nova celebração</h3><label>Data<input name="data" type="date" required></label><label>Nome da celebração<input name="celebracao" maxlength="200" required></label><button class="btn">Criar celebração</button></form></aside>
+<div class="panel"><form id="musica"><div class="eyebrow" id="modo">Nova música</div><h2>Preparar uma música</h2><p>Preencha os campos e salve para publicar no site.</p>
+<label>Título da música<input name="titulo" maxlength="200" required></label>
+<div class="dupla"><label>Momento litúrgico<select name="momento" required></select></label><label>Tom<input name="tom" maxlength="40" placeholder="Ex.: Sol maior"></label></div>
+<label>Letra<textarea name="letra" rows="6" maxlength="50000"></textarea></label>
+<label>Cifra em texto<textarea name="cifraTexto" rows="8" maxlength="50000" class="cifra" spellcheck="false" placeholder="Cole os acordes e a letra aqui, mantendo os espaços."></textarea></label>
+<fieldset><legend>Áudio da música</legend><label>Link HTTPS<input name="audio" maxlength="2000" placeholder="https://…"></label><label>Ou enviar áudio (até 20 MB)<input type="file" data-upload="audio" accept=".mp3,.m4a,.wav,.ogg"></label><small>MP3, M4A, WAV ou OGG.</small></fieldset>
+<fieldset><legend>Cifra em PDF</legend><label>Link HTTPS<input name="cifra" maxlength="2000" placeholder="https://…"></label><label>Ou enviar PDF (até 10 MB)<input type="file" data-upload="cifra" accept=".pdf"></label></fieldset>
+<fieldset><legend>Partitura (opcional)</legend><label>Link HTTPS<input name="partitura" maxlength="2000" placeholder="https://…"></label><label>Ou enviar PDF (até 10 MB)<input type="file" data-upload="partitura" accept=".pdf"></label></fieldset>
+<p class="ajuda">Para substituir um arquivo, envie o novo. Para retirar um arquivo da música, limpe o link correspondente. Os arquivos e textos publicados ficam disponíveis a todos os visitantes.</p>
+<div class="botoes"><button class="btn" id="salvar">Salvar e publicar</button><button class="btn secondary" type="button" id="cancelar">Limpar edição</button><button class="btn perigo" type="button" id="excluir" hidden>Excluir música</button></div>
+</form></div></div>
+</section>
+<noscript>Ative o JavaScript para entrar e editar as músicas.</noscript>
+</main>
+<footer>PASTORAL DA MÚSICA · Paróquia Sagrada Família</footer>
+<script type="module" src="/admin.js"></script>
+</body></html>
