@@ -646,9 +646,15 @@ if (!correspondencia) continue;
 
 const titulo = correspondencia[1].padStart(2, '0');
 
-      if (!grupos.has(titulo)) {
-grupos.set(titulo, { audios: [], pdfs: [], tituloArquivo: '' });
-        if (tituloArquivo && !grupos.get(titulo).tituloArquivo) {
+    if (!grupos.has(titulo)) {
+  grupos.set(titulo, {
+    audios: [],
+    pdfs: [],
+    tituloArquivo: ''
+  });
+}
+
+if (tituloArquivo && !grupos.get(titulo).tituloArquivo) {
   grupos.get(titulo).tituloArquivo = tituloArquivo;
 }
 }
