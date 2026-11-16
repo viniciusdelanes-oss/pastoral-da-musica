@@ -88,6 +88,17 @@ async function load(selected = $('repertorios').value) {
   if (reps.some(r => r.id === selected)) $('repertorios').value = selected;
 
   form.dataset.repertorio = $('repertorios').value;
+  const importarRepertorio = $('importar-repertorio');
+
+if (importarRepertorio) {
+  importarRepertorio.innerHTML = reps.length
+    ? reps.map(r => `<option value="${r.id}">${r.data.split('-').reverse().join('/')} · ${r.celebracao}</option>`).join('')
+    : '<option value="">Crie uma celebração primeiro</option>';
+
+  importarRepertorio.value = reps.some(r => r.id === selected)
+    ? selected
+    : (reps[0]?.id || '');
+}
   list();
 }
 
