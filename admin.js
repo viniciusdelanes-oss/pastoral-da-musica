@@ -631,21 +631,26 @@ if (extensao === 'pdf') {
       let semAudio = 0;
       let semPDF = 0;
 
-     let detalhes = [];
+ let detalhes = [];
 
 for (const [numero, item] of grupos.entries()) {
   if (item.audio && item.pdf) {
     pares++;
-    detalhes.push(`Nº ${numero} - PAR ENCONTRADO\nÁudio: ${item.audio}\nPDF: ${item.pdf}`);
+    detalhes.push(
+      `Nº ${numero} - PAR ENCONTRADO\nÁudio: ${item.audio}\nPDF: ${item.pdf}`
+    );
   } else if (item.pdf) {
     semAudio++;
-    detalhes.push(`Nº ${numero} - PDF SEM ÁUDIO\nPDF: ${item.pdf}`);
+    detalhes.push(
+      `Nº ${numero} - PDF SEM ÁUDIO\nPDF: ${item.pdf}`
+    );
   } else if (item.audio) {
     semPDF++;
-    detalhes.push(`Nº ${numero} - ÁUDIO SEM PDF\nÁudio: ${item.audio}`);
+    detalhes.push(
+      `Nº ${numero} - ÁUDIO SEM PDF\nÁudio: ${item.audio}`
+    );
   }
 }
-
       totalPares += pares;
 
      relatorio.push(
