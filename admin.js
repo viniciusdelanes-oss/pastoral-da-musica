@@ -629,12 +629,16 @@ const arquivos = document.getElementById('arquivos-zip').files;
       for (const entrada of entradas) {
         if (entrada.directory) continue;
 
-        const nome = entrada.filename.split('/').pop();
-        const tituloArquivo = nome
+      const nome = entrada.filename.split('/').pop();
+
+const tituloArquivo = nome
   .replace(/\.[^.]+$/, '')
   .replace(/^\s*\d+[\s._-]*/, '')
   .trim();
-        const extensao = nome.split('.').pop().toLowerCase();
+
+console.log('TESTE DO TÍTULO:', nome, '=>', tituloArquivo);
+
+const extensao = nome.split('.').pop().toLowerCase();
 
         if (!['mp3','m4a','wav','ogg','pdf'].includes(extensao)) {
           continue;
