@@ -209,6 +209,20 @@ document.addEventListener('click',e=>{
 document.getElementById('busca').addEventListener('input',()=>{pararPlayers();desenharBiblioteca()});
 
 desenharLista();desenharRepertorio();desenharBiblioteca();
+ const containerNoticias = document.getElementById('noticias-container');
+
+if(containerNoticias){
+  if(!noticias || noticias.length === 0){
+    containerNoticias.innerHTML = '<p>Nenhuma notícia publicada no momento.</p>';
+  } else {
+    containerNoticias.innerHTML = noticias.map(n => `
+      <article style="padding:16px 0;border-bottom:1px solid var(--border)">
+        <h3>${n.titulo || 'Sem título'}</h3>
+        <p>${n.resumo || n.conteudo || ''}</p>
+      </article>
+    `).join('');
+  }
+}
 
 
 async function carregarConteudoOnline(){
