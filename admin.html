@@ -76,7 +76,8 @@
 </label>
 
 <label>Foto do coordenador
-  <input name="coordenador_foto" type="url" placeholder="Link da foto (poderemos adaptar para envio de arquivo)">
+  <input name="coordenador_foto" type="hidden">
+  <input type="file" data-upload="coordenador_foto" accept="image/*">
 </label>
 
 <h4>História da Pastoral</h4>
@@ -109,12 +110,15 @@
     <label>Cor de destaque
       <input name="cor_destaque" type="color" value="#c8a45d">
     </label>
-    <label>Endereço da imagem do logotipo
-      <input name="logo_url" type="url" placeholder="https://...">
-    </label>
-    <label>Endereço da imagem de destaque
-      <input name="imagem_destaque" type="url" placeholder="https://...">
-    </label>
+    <label>Logotipo do site
+  <input name="logo_url" type="hidden">
+  <input type="file" data-upload="logo_url" accept="image/*">
+</label>
+
+<label>Imagem de destaque
+  <input name="imagem_destaque" type="hidden">
+  <input type="file" data-upload="imagem_destaque" accept="image/*">
+</label>
 
     <div class="botoes">
       <button class="btn" type="submit">Salvar personalizações</button>
@@ -142,9 +146,10 @@
       <textarea name="conteudo" rows="8"></textarea>
     </label>
 
-    <label>Link da imagem de capa
-      <input name="imagem_capa" type="url" placeholder="https://...">
-    </label>
+    <label>Imagem de capa
+  <input name="imagem_capa" type="hidden">
+  <input type="file" data-upload="imagem_capa" accept="image/*">
+</label>
 
     <label>Data da publicação
       <input name="data_publicacao" type="date">
