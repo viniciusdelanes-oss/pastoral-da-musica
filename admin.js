@@ -680,14 +680,13 @@ if (tituloArquivo) {
 }
 
 if (extensao === 'pdf') {
- if (ehPartitura) {
-  grupos.get(titulo).partituras.push(nome);
-  totalPartituras++;
-} else {
-  grupos.get(titulo).pdfs.push(nome);
-}
+  if (ehPartitura) {
+    grupos.get(titulo).partituras.push(nome);
+    totalPartituras++;
+  } else {
+    grupos.get(titulo).pdfs.push(nome);
+  }
   totalPDFs++;
-}
 } else {
   grupos.get(titulo).audios.push(nome);
   totalAudios++;
