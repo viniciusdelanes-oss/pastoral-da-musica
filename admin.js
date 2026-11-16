@@ -106,6 +106,7 @@ async function access() {
   $('acesso').hidden = true;
   $('editor').hidden = false;
   await load();
+  await carregarPersonalizacao();
   message('Acesso autorizado. Escolha uma celebração para começar.');
 }
 
@@ -335,7 +336,68 @@ $('abrir-noticias').onclick = () => {
     painel.scrollIntoView({ behavior: 'smooth' });
   }
 };
+// PERSONALIZAÇÃO DO SITE
 
+const formSite = $('form-site');
+let configuracaoSiteId = null;
+
+async function carregarPersonalizacao() {
+  const { data, error } = await supabase
+    .from('site_configuracoes')
+    .select('id, valor')
+    .eq('chave', 'conteudo_site')
+    .maybeSingle();
+
+  if (error) throw error;
+
+  configuracaoSiteId = data?.id || null;
+  const valores = data?.valor || {};
+
+  for (const campo of formSite.elements) {
+    if (campo.name && valores[campo.name] !== undefined) {
+      campo.value = valores[campo.name] ?? '';
+    }
+  }
+}
+
+formSite.onsubmit = e => {
+  e.preventDefault();
+
+  run(async () => {
+    message('Salvando personalizações…');
+
+    const valores = Object.fromEntries(new FormData(formSite));
+
+    let resultado;
+
+    if (configuracaoSiteId) {
+      resultado = await supabase
+        .from('site_configuracoes')
+        .update({
+          valor: valores,
+          atualizado_em: new Date().toISOString()
+        })
+        .eq('id', configuracaoSiteId);
+    } else {
+      resultado = await supabase
+        .from('site_configuracoes')
+        .insert({
+          chave: 'conteudo_site',
+          valor: valores
+        })
+        .select('id')
+        .single();
+
+      if (!resultado.error) {
+        configuracaoSiteId = resultado.data.id;
+      }
+    }
+
+    if (resultado.error) throw resultado.error;
+
+    message('Personalizações salvas com sucesso.');
+  });
+};
 // GERENCIAMENTO DE NOTÍCIAS
 
 const formNoticia = $('form-noticia');
