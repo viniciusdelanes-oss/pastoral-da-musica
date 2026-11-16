@@ -576,3 +576,83 @@ access().catch(error => {
   console.error(error);
   message('Erro ao verificar acesso: ' + error.message, true);
 });
+
+$('analisar-zip').onclick = () => run(async () => {
+  const arquivos = $('arquivos-zip').files;
+  if (!arquivos.length) {
+    throw new Error('Selecione pelo menos um arquivo ZIP.');
+  }
+
+  const resultado = $('resultado-importacao');
+  resultado.textContent = 'Analisando arquivos...';
+
+  let relatorio = [];
+  let totalAudios = 0;
+  let totalPDFs = 0;
+  let totalPares = 0;
+
+  for (const zip of arquivos) {
+    const reader = new ZipReader(new BlobReader(zip));
+
+    try {
+      const entradas = await reader.getEntries();
+      const grupos = new Map();
+
+      for (const entrada of entradas) {
+        if (entrada.directory) continue;
+
+        const nome = entrada.filename.split('/').pop();
+        const extensao = nome.split('.').pop().toLowerCase();
+
+        if (!['mp3','m4a','wav','ogg','pdf'].includes(extensao)) {
+          continue;
+        }
+
+        const titulo = nome.slice(0, -(extensao.length + 1))
+          .trim()
+          .toLocaleLowerCase('pt-BR');
+
+        if (!grupos.has(titulo)) {
+          grupos.set(titulo, { audio: false, pdf: false });
+        }
+
+        if (extensao === 'pdf') {
+          grupos.get(titulo).pdf = true;
+          totalPDFs++;
+        } else {
+          grupos.get(titulo).audio = true;
+          totalAudios++;
+        }
+      }
+
+      let pares = 0;
+      let semAudio = 0;
+      let semPDF = 0;
+
+      for (const item of grupos.values()) {
+        if (item.audio && item.pdf) pares++;
+        else if (item.pdf) semAudio++;
+        else if (item.audio) semPDF++;
+      }
+
+      totalPares += pares;
+
+      relatorio.push(
+        `${zip.name}\n` +
+        `Músicas identificadas: ${grupos.size}\n` +
+        `Pares de áudio e PDF: ${pares}\n` +
+        `PDFs sem áudio: ${semAudio}\n` +
+        `Áudios sem PDF: ${semPDF}`
+      );
+
+    } finally {
+      await reader.close();
+    }
+  }
+
+  resultado.textContent =
+    relatorio.join('\n\n') +
+    `\n\nTOTAL DE PARES: ${totalPares}` +
+    `\nTOTAL DE ÁUDIOS: ${totalAudios}` +
+    `\nTOTAL DE PDFs: ${totalPDFs}`;
+});
