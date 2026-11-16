@@ -685,7 +685,7 @@ let totalPares = 0;
   totalAudios++;
   if (!item.tituloAudio) item.tituloAudio = tituloArquivo;
 }
-          }
+          
         } else {
           item.audios.push(nome);
           totalAudios++;
