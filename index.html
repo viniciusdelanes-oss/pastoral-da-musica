@@ -235,7 +235,7 @@ async function carregarConteudoOnline(){
     if(erroCelebracoes) throw erroCelebracoes;
     if(erroMusicas) throw erroMusicas;
    if(erroNoticias) throw erroNoticias;
-   const listaNoticias = Array.isArray(noticias) ? noticias : [];
+ window.listaNoticias = Array.isArray(noticias) ? noticias : [];
 
     const rows = (celebracoes || []).map(r => ({
       ...r,
@@ -262,10 +262,10 @@ async function carregarConteudoOnline(){
 const containerNoticias = document.getElementById('noticias-container');
 
 if(containerNoticias){
-  if(listaNoticias.length === 0){
+  if(window.listaNoticias.length === 0){
     containerNoticias.innerHTML = '<p>Nenhuma notícia publicada no momento.</p>';
   } else {
-    containerNoticias.innerHTML = listaNoticias.map(n => `
+    containerNoticias.innerHTML = window.listaNoticias.map(n => `
       <article style="padding:16px 0;border-bottom:1px solid var(--border)">
         <h3>${n.titulo || 'Sem título'}</h3>
         <p>${n.resumo || n.conteudo || ''}</p>
