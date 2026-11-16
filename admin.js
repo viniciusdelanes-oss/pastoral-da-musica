@@ -669,8 +669,10 @@ $('analisar-zip').onclick = () => run(async () => {
           item.partituras.push(nome);
           totalPartituras++;
         } else if (extensao === 'doc' || extensao === 'docx') {
-          item.pdfs.push(nome);
-          totalPDFs++;
+          if (!item.pdfs.some(arquivo => arquivo.trim().toLowerCase() === nome.trim().toLowerCase())) {
+  item.pdfs.push(nome);
+  totalPDFs++;
+}
           if (!item.tituloPDF) item.tituloPDF = tituloArquivo;
         } else {
           item.audios.push(nome);
