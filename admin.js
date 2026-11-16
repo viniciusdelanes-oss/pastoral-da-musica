@@ -589,7 +589,7 @@ access().catch(error => {
 });
 
 
-
+let loteImportacao = [];
 $('analisar-zip').onclick = () => run(async () => {
   function identificarMomento(nome) {
     const texto = nome.normalize('NFD')
@@ -655,28 +655,34 @@ $('analisar-zip').onclick = () => run(async () => {
           .trim();
 
         if (!grupos.has(numero)) {
-          grupos.set(numero, {
-            audios: [],
-            pdfs: [],
-            partituras: [],
-            tituloAudio: '',
-            tituloPDF: ''
-          });
+        grupos.set(numero, {
+  audios: [],
+  pdfs: [],
+  partituras: [],
+  caminhosAudios: [],
+  caminhosCifras: [],
+  caminhosPartituras: [],
+  tituloAudio: '',
+  tituloPDF: ''
+});
         }
 
         const item = grupos.get(numero);
 
         if (extensao === 'pdf') {
           item.partituras.push(nome);
+          item.caminhosPartituras.push(nomeCompleto);
           totalPartituras++;
         } else if (extensao === 'doc' || extensao === 'docx') {
-          if (!item.pdfs.some(arquivo => arquivo.trim().toLowerCase() === nome.trim().toLowerCase())) {
+      if (!item.pdfs.some(arquivo => arquivo.trim().toLowerCase() === nome.trim().toLowerCase())) {
   item.pdfs.push(nome);
+  item.caminhosCifras.push(nomeCompleto);
   totalPDFs++;
 }
           if (!item.tituloPDF) item.tituloPDF = tituloArquivo;
         } else {
           item.audios.push(nome);
+          item.caminhosAudios.push(nomeCompleto);
           totalAudios++;
           if (!item.tituloAudio) item.tituloAudio = tituloArquivo;
         }
@@ -689,6 +695,15 @@ $('analisar-zip').onclick = () => run(async () => {
 
       for (const [numero, item] of grupos.entries()) {
         const titulo = item.tituloAudio || item.tituloPDF || 'SEM TÍTULO';
+        loteImportacao.push({
+  zip,
+  repertorio,
+  titulo,
+  momento: identificarMomento(zip.name),
+  audioPath: item.caminhosAudios[0] || null,
+  cifraPath: item.caminhosCifras[0] || null,
+  partituraPath: item.caminhosPartituras[0] || null
+});
 
       if (
   item.audios.length > 1 ||
