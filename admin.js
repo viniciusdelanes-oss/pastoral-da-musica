@@ -655,9 +655,14 @@ grupos.set(titulo, {
 });
 }
 
-if (tituloArquivo && !grupos.get(titulo).tituloArquivo) {
-  grupos.get(titulo).tituloArquivo = tituloArquivo;
-}
+if (tituloArquivo) {
+  if (extensao === 'pdf' && !grupos.get(titulo).tituloPDF) {
+    grupos.get(titulo).tituloPDF = tituloArquivo;
+  }
+
+  if (extensao !== 'pdf' && !grupos.get(titulo).tituloAudio) {
+    grupos.get(titulo).tituloAudio = tituloArquivo;
+  }
 }
 
 if (extensao === 'pdf') {
