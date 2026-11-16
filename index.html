@@ -220,10 +220,15 @@ async function carregarConteudoOnline(){
       'sb_publishable_F5WPlc--Rxyxn-YIC1H5VA_q5o6Hc12'
     );
 
-    const [{data:celebracoes,error:erroCelebracoes},{data:musicas,error:erroMusicas}] = await Promise.all([
-      supabaseClient.from('site_celebracoes').select('*').order('data'),
-      supabaseClient.from('site_musicas').select('*')
-    ]);
+  const [
+  {data:celebracoes,error:erroCelebracoes},
+  {data:musicas,error:erroMusicas},
+  {data:noticias,error:erroNoticias}
+] = await Promise.all([
+  supabaseClient.from('site_celebracoes').select('*').order('data'),
+  supabaseClient.from('site_musicas').select('*'),
+  supabaseClient.from('site_noticias').select('*')
+]);
 
     if(erroCelebracoes) throw erroCelebracoes;
     if(erroMusicas) throw erroMusicas;
