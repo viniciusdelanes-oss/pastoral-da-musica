@@ -673,17 +673,18 @@ let totalPares = 0;
 
         const item = grupos.get(numero);
 
-        if (extensao === 'pdf') {
-          if (ehPartitura) {
-            item.partituras.push(nome);
-            totalPartituras++;
-          } else {
-            item.pdfs.push(nome);
-            totalPDFs++;
-
-            if (!item.tituloPDF) {
-              item.tituloPDF = tituloArquivo;
-            }
+     if (extensao === 'pdf') {
+  item.partituras.push(nome);
+  totalPartituras++;
+} else if (extensao === 'doc' || extensao === 'docx') {
+  item.pdfs.push(nome);
+  totalPDFs++;
+  if (!item.tituloPDF) item.tituloPDF = tituloArquivo;
+} else {
+  item.audios.push(nome);
+  totalAudios++;
+  if (!item.tituloAudio) item.tituloAudio = tituloArquivo;
+}
           }
         } else {
           item.audios.push(nome);
