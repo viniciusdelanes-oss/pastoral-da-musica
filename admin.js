@@ -687,23 +687,23 @@ for (const [numero, item] of grupos.entries()) {
       `Áudios: ${item.audios.join(', ') || 'Nenhum'}\n` +
       `PDFs: ${item.pdfs.join(', ') || 'Nenhum'}`
     );
-  } else if (item.audios.length === 1 && item.pdfs.length === 1) {
-    pares++;
-    detalhes.push(
-      `Nº ${numero} - ${item.tituloArquivo || 'SEM TÍTULO'} - PAR ENCONTRADO\n` +
-      `Áudio: ${item.audios[0]}\nPDF: ${item.pdfs[0]}`
-    );
-  } else if (item.pdfs.length === 1) {
-    semAudio++;
-    detalhes.push(
-     `Nº ${numero} - ${item.tituloArquivo || 'SEM TÍTULO'} - PDF SEM ÁUDIO\nPDF: ${item.pdfs[0]}`
-    );
-  } else if (item.audios.length === 1) {
-    semPDF++;
-    detalhes.push(
-    `Nº ${numero} - ${item.tituloArquivo || 'SEM TÍTULO'} - ÁUDIO SEM PDF\nÁudio: ${item.audios[0]}`
-    );
-  }
+ } else if (item.audios.length === 1 && item.pdfs.length === 1) {
+  pares++;
+  detalhes.push(
+    `Nº ${numero} - ${item.tituloAudio || item.tituloPDF || 'SEM TÍTULO'} - PAR ENCONTRADO\n` +
+    `Áudio: ${item.audios[0]}\nPDF: ${item.pdfs[0]}`
+  );
+} else if (item.pdfs.length === 1) {
+  semAudio++;
+  detalhes.push(
+    `Nº ${numero} - ${item.tituloAudio || item.tituloPDF || 'SEM TÍTULO'} - PDF SEM ÁUDIO\nPDF: ${item.pdfs[0]}`
+  );
+} else if (item.audios.length === 1) {
+  semPDF++;
+  detalhes.push(
+    `Nº ${numero} - ${item.tituloAudio || item.tituloPDF || 'SEM TÍTULO'} - ÁUDIO SEM PDF\nÁudio: ${item.audios[0]}`
+  );
+}
 }
       totalPares += pares;
 
