@@ -635,7 +635,7 @@ if (!repertorio) {
       for (const entrada of entradas) {
         if (entrada.directory) continue;
         const nomeCompleto = entrada.filename;
-        const arquivoBlob = await entrada.getData(new BlobWriter());
+       
 
       const nome = entrada.filename.split('/').pop();
 
