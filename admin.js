@@ -663,6 +663,7 @@ const titulo = correspondencia[1].padStart(2, '0');
 grupos.set(titulo, {
   audios: [],
   pdfs: [],
+  partituras: [],
   tituloAudio: '',
   tituloPDF: ''
 });
