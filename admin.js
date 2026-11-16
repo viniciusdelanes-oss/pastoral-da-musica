@@ -635,6 +635,7 @@ $('analisar-zip').onclick = () => run(async () => {
         if (entrada.directory) continue;
 
         const nomeCompleto = entrada.filename;
+       console.log('ARQUIVO ZIP:', JSON.stringify(entrada.filename)); 
         const caminho = nomeCompleto.toUpperCase();
         const nome = nomeCompleto.split('/').pop();
         const extensao = nome.split('.').pop().toLowerCase();
