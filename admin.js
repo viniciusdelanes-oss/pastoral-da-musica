@@ -662,8 +662,7 @@ if (extensao === 'pdf') {
  let detalhes = [];
 
 for (const [numero, item] of grupos.entries()) {
- detalhes.push(
-  `TESTE Nº ${numero}: áudios=${item.audios.length}, PDFs=${item.pdfs.length}`
+: áudios=${item.audios.length}, PDFs=${item.pdfs.length}`
 ); 
   if (item.audios.length > 1 || item.pdfs.length > 1) {
     detalhes.push(
