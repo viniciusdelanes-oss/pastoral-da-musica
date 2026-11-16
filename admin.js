@@ -46,7 +46,13 @@ async function run(work) {
     message(error.message || 'Não foi possível concluir. Tente novamente.', true);
   } finally {
     busy = false;
-    document.querySelectorAll('button').forEach(b => b.disabled = false);
+    document.querySelectorAll('button').forEach(b => {
+  if (b.id === 'importar-musicas-zip') {
+    b.disabled = loteImportacao.length === 0;
+  } else {
+    b.disabled = false;
+  }
+});
   }
 }
 
