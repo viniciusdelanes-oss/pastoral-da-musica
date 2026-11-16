@@ -662,20 +662,27 @@ if (extensao === 'pdf') {
  let detalhes = [];
 
 for (const [numero, item] of grupos.entries()) {
-  if (item.audio && item.pdf) {
+  if (item.audios.length > 1 || item.pdfs.length > 1) {
+    detalhes.push(
+      `Nº ${numero} - DUPLICIDADE: CONFERIR MANUALMENTE\n` +
+      `Áudios: ${item.audios.join(', ') || 'Nenhum'}\n` +
+      `PDFs: ${item.pdfs.join(', ') || 'Nenhum'}`
+    );
+  } else if (item.audios.length === 1 && item.pdfs.length === 1) {
     pares++;
     detalhes.push(
-      `Nº ${numero} - PAR ENCONTRADO\nÁudio: ${item.audio}\nPDF: ${item.pdf}`
+      `Nº ${numero} - PAR ENCONTRADO\n` +
+      `Áudio: ${item.audios[0]}\nPDF: ${item.pdfs[0]}`
     );
-  } else if (item.pdf) {
+  } else if (item.pdfs.length === 1) {
     semAudio++;
     detalhes.push(
-      `Nº ${numero} - PDF SEM ÁUDIO\nPDF: ${item.pdf}`
+      `Nº ${numero} - PDF SEM ÁUDIO\nPDF: ${item.pdfs[0]}`
     );
-  } else if (item.audio) {
+  } else if (item.audios.length === 1) {
     semPDF++;
     detalhes.push(
-      `Nº ${numero} - ÁUDIO SEM PDF\nÁudio: ${item.audio}`
+      `Nº ${numero} - ÁUDIO SEM PDF\nÁudio: ${item.audios[0]}`
     );
   }
 }
