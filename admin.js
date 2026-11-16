@@ -644,7 +644,6 @@ const tituloArquivo = nome
   .replace(/^\s*\d+[\s._-]*/, '')
   .trim();
 
-console.log('TESTE DO TÍTULO:', nome, '=>', tituloArquivo);
 
 const extensao = nome.split('.').pop().toLowerCase();
 
