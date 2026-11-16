@@ -779,3 +779,114 @@ $('analisar-zip').onclick = () => run(async () => {
     `\nTOTAL DE PARTITURAS PDF: ${totalPartituras}`;
 });
 
+$('importar-musicas-zip').onclick = () => {
+  if (!loteImportacao.length) {
+    message('Primeiro analise os arquivos ZIP.', true);
+    return;
+  }
+
+  const quantidade = loteImportacao.length;
+
+  if (!confirm(`Serão importadas ${quantidade} músicas. Deseja continuar?`)) {
+    return;
+  }
+
+  run(async () => {
+    const pendentes = [];
+    let importadas = 0;
+    const erros = [];
+
+    for (let i = 0; i < loteImportacao.length; i++) {
+      const item = loteImportacao[i];
+      const arquivosEnviados = [];
+
+      $('resultado-importacao').textContent =
+        `Importando ${i + 1} de ${quantidade}: ${item.titulo}`;
+
+      let reader;
+
+      try {
+        reader = new ZipReader(new BlobReader(item.zip));
+        const entradas = await reader.getEntries();
+
+        async function enviarArquivo(caminho) {
+          if (!caminho) return '';
+
+          const entrada = entradas.find(e => e.filename === caminho);
+
+          if (!entrada) {
+            throw new Error(`Arquivo não encontrado no ZIP: ${caminho}`);
+          }
+
+          const blob = await entrada.getData(new BlobWriter());
+          const extensao = caminho.split('.').pop().toLowerCase();
+          const destino = `${crypto.randomUUID()}.${extensao}`;
+
+          const { error } = await supabase.storage
+            .from('musicas')
+            .upload(destino, blob);
+
+          if (error) throw error;
+
+          arquivosEnviados.push(destino);
+
+          const { data } = supabase.storage
+            .from('musicas')
+            .getPublicUrl(destino);
+
+          return data.publicUrl;
+        }
+
+        const audio = await enviarArquivo(item.audioPath);
+        const cifra = await enviarArquivo(item.cifraPath);
+        const partitura = await enviarArquivo(item.partituraPath);
+
+        const { error } = await supabase
+          .from('site_musicas')
+          .insert({
+            repertorio: item.repertorio,
+            titulo: item.titulo,
+            momento: item.momento,
+            tom: '',
+            letra: '',
+            cifra_texto: '',
+            audio,
+            cifra,
+            partitura
+          });
+
+        if (error) throw error;
+
+        importadas++;
+
+      } catch (erro) {
+        pendentes.push(item);
+        erros.push(`${item.titulo}: ${erro.message}`);
+
+        if (arquivosEnviados.length) {
+          await supabase.storage
+            .from('musicas')
+            .remove(arquivosEnviados);
+        }
+
+      } finally {
+        if (reader) await reader.close();
+      }
+    }
+
+    loteImportacao = pendentes;
+    await load();
+
+    $('resultado-importacao').textContent =
+      `Importação concluída!\n` +
+      `Músicas cadastradas: ${importadas}\n` +
+      `Músicas com erro: ${pendentes.length}\n` +
+      (erros.length ? `\nERROS:\n${erros.join('\n')}` : '');
+
+    message(
+      `${importadas} músicas importadas. ${pendentes.length} com erro.`,
+      pendentes.length > 0
+    );
+  });
+};
+
