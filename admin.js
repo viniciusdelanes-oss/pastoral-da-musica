@@ -648,32 +648,32 @@ let totalPares = 0;
 
         const extensao = nome.split('.').pop().toLowerCase();
 
-       if (!['mp3','m4a','wav','ogg','pdf','doc','docx'].includes(extensao)) continue;
-        }
+    
+if (!['mp3','m4a','wav','ogg','pdf','doc','docx'].includes(extensao)) continue;
 
-        const correspondencia = nome.match(/(\d+)/);
-        if (!correspondencia) continue;
+const correspondencia = nome.match(/(\d+)/);
+if (!correspondencia) continue;
 
-        const numero = correspondencia[1].padStart(2, '0');
+const numero = correspondencia[1].padStart(2, '0');
 
-        const tituloArquivo = nome
-          .replace(/\.[^.]+$/, '')
-          .replace(/^\s*\d+[\s._-]*/, '')
-          .trim();
+const tituloArquivo = nome
+  .replace(/\.[^.]+$/, '')
+  .replace(/^\s*\d+[\s._-]*/, '')
+  .trim();
 
-        if (!grupos.has(numero)) {
-          grupos.set(numero, {
-            audios: [],
-            pdfs: [],
-            partituras: [],
-            tituloAudio: '',
-            tituloPDF: ''
-          });
-        }
+if (!grupos.has(numero)) {
+  grupos.set(numero, {
+    audios: [],
+    pdfs: [],
+    partituras: [],
+    tituloAudio: '',
+    tituloPDF: ''
+  });
+}
 
-        const item = grupos.get(numero);
+const item = grupos.get(numero);
 
- if (extensao === 'pdf') {
+if (extensao === 'pdf') {
   item.partituras.push(nome);
   totalPartituras++;
 } else if (extensao === 'doc' || extensao === 'docx') {
@@ -684,15 +684,8 @@ let totalPares = 0;
   item.audios.push(nome);
   totalAudios++;
   if (!item.tituloAudio) item.tituloAudio = tituloArquivo;
-}  
-        } else {
-          item.audios.push(nome);
-          totalAudios++;
+}
 
-          if (!item.tituloAudio) {
-            item.tituloAudio = tituloArquivo;
-          }
-        }
       }
 
       let pares = 0;
