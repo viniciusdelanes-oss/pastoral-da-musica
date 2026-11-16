@@ -617,6 +617,7 @@ $('analisar-zip').onclick = () => run(async () => {
 
   const resultado = $('resultado-importacao');
   resultado.textContent = 'Analisando arquivos...';
+  loteImportacao = [];
 
   let relatorio = [];
   let totalAudios = 0;
