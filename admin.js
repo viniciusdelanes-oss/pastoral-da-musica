@@ -744,5 +744,6 @@ for (const [numero, item] of grupos.entries()) {
     relatorio.join('\n\n') +
     `\n\nTOTAL DE PARES: ${totalPares}` +
     `\nTOTAL DE ÁUDIOS: ${totalAudios}` +
-    `\nTOTAL DE PDFs: ${totalPDFs}`;
+    `TOTAL DE PDFs: ${totalPDFs}` +
+`\nTOTAL DE PARTITURAS: ${totalPartituras}`;
 });
