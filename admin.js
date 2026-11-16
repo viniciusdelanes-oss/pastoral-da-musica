@@ -662,14 +662,13 @@ if (extensao === 'pdf') {
 }
       }
 
-      let pares = 0;
-      let semAudio = 0;
-      let semPDF = 0;
+   let pares = 0;
+let semAudio = 0;
+let semPDF = 0;
 
- let detalhes = [];
+let detalhes = [];
 
 for (const [numero, item] of grupos.entries()) {
-  if (item.audios.length > 1 || item.pdfs.length > 1) {
   if (item.audios.length > 1 || item.pdfs.length > 1) {
     detalhes.push(
       `Nº ${numero} - DUPLICIDADE: CONFERIR MANUALMENTE\n` +
