@@ -640,7 +640,8 @@ let totalPares = 0;
 
         const nomeCompleto = entrada.filename;
         const caminho = nomeCompleto.toUpperCase();
-        const ehPartitura = caminho.includes('PARTITURA');
+       const ehPartitura = caminho.includes('/PARTITURA/') ||
+                    caminho.startsWith('PARTITURA/');
         console.log('ARQUIVO ZIP:', caminho, '| É partitura:', ehPartitura);
 
         const nome = nomeCompleto.split('/').pop();
