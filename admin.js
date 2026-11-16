@@ -621,7 +621,7 @@ if (!repertorio) {
 
   let relatorio = [];
   let totalAudios = 0;
-  let totalPDFs = 0;
+  let totalPartituras = 0;
   let totalPares = 0;
 
   for (const zip of arquivos) {
