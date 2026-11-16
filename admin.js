@@ -318,15 +318,17 @@ $('excluir').onclick = () => {
     message('Música excluída.');
   });
 };
-$('abrir-personalizacao').onclick $('abrir-noticias').onclick = () => {
-  const painel = $('gerenciar-noticias');
+$('abrir-personalizacao').onclick = () => {
+  const painel = $('personalizar-site');
   painel.hidden = !painel.hidden;
 
   if (!painel.hidden) {
     painel.scrollIntoView({ behavior: 'smooth' });
   }
-};= () => {
-  const painel = $('personalizar-site');
+};
+
+$('abrir-noticias').onclick = () => {
+  const painel = $('gerenciar-noticias');
   painel.hidden = !painel.hidden;
 
   if (!painel.hidden) {
