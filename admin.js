@@ -673,7 +673,7 @@ let totalPares = 0;
 
         const item = grupos.get(numero);
 
-     if (extensao === 'pdf') {
+ if (extensao === 'pdf') {
   item.partituras.push(nome);
   totalPartituras++;
 } else if (extensao === 'doc' || extensao === 'docx') {
