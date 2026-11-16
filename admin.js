@@ -589,6 +589,7 @@ access().catch(error => {
 });
 
 
+
 $('analisar-zip').onclick = () => run(async () => {
   function identificarMomento(nome) {
     const texto = nome.normalize('NFD')
@@ -611,22 +612,17 @@ $('analisar-zip').onclick = () => run(async () => {
   const arquivos = $('arquivos-zip').files;
   const repertorio = $('importar-repertorio').value;
 
-  if (!repertorio) {
-    throw new Error('Selecione a celebração de destino.');
-  }
-
-  if (!arquivos.length) {
-    throw new Error('Selecione pelo menos um arquivo ZIP.');
-  }
+  if (!repertorio) throw new Error('Selecione a celebração de destino.');
+  if (!arquivos.length) throw new Error('Selecione pelo menos um arquivo ZIP.');
 
   const resultado = $('resultado-importacao');
   resultado.textContent = 'Analisando arquivos...';
 
   let relatorio = [];
- let totalAudios = 0;
-let totalPDFs = 0;
-let totalPartituras = 0;
-let totalPares = 0;
+  let totalAudios = 0;
+  let totalPDFs = 0;
+  let totalPartituras = 0;
+  let totalPares = 0;
 
   for (const zip of arquivos) {
     const reader = new ZipReader(new BlobReader(zip));
@@ -640,102 +636,90 @@ let totalPares = 0;
 
         const nomeCompleto = entrada.filename;
         const caminho = nomeCompleto.toUpperCase();
-       const ehPartitura = caminho.includes('/PARTITURA/') ||
-                    caminho.startsWith('PARTITURA/');
-        console.log('ARQUIVO ZIP:', caminho, '| É partitura:', ehPartitura);
-
         const nome = nomeCompleto.split('/').pop();
-
         const extensao = nome.split('.').pop().toLowerCase();
 
-    
-if (!['mp3','m4a','wav','ogg','pdf','doc','docx'].includes(extensao)) continue;
+        if (!['mp3', 'm4a', 'wav', 'ogg', 'pdf', 'doc', 'docx'].includes(extensao)) {
+          continue;
+        }
 
-const correspondencia = nome.match(/(\d+)/);
-if (!correspondencia) continue;
+        const correspondencia = nome.match(/(\d+)/);
+        if (!correspondencia) continue;
 
-const numero = correspondencia[1].padStart(2, '0');
+        const numero = correspondencia[1].padStart(2, '0');
 
-const tituloArquivo = nome
-  .replace(/\.[^.]+$/, '')
-  .replace(/^\s*\d+[\s._-]*/, '')
-  .trim();
+        const tituloArquivo = nome
+          .replace(/\.[^.]+$/, '')
+          .replace(/^\s*\d+[\s._-]*/, '')
+          .trim();
 
-if (!grupos.has(numero)) {
-  grupos.set(numero, {
-    audios: [],
-    pdfs: [],
-    partituras: [],
-    tituloAudio: '',
-    tituloPDF: ''
-  });
-}
+        if (!grupos.has(numero)) {
+          grupos.set(numero, {
+            audios: [],
+            pdfs: [],
+            partituras: [],
+            tituloAudio: '',
+            tituloPDF: ''
+          });
+        }
 
-const item = grupos.get(numero);
+        const item = grupos.get(numero);
 
-if (extensao === 'pdf') {
-  item.partituras.push(nome);
-  totalPartituras++;
-} else if (extensao === 'doc' || extensao === 'docx') {
-  item.pdfs.push(nome);
-  totalPDFs++;
-  if (!item.tituloPDF) item.tituloPDF = tituloArquivo;
-} else {
-  item.audios.push(nome);
-  totalAudios++;
-  if (!item.tituloAudio) item.tituloAudio = tituloArquivo;
-}
-
+        if (extensao === 'pdf') {
+          item.partituras.push(nome);
+          totalPartituras++;
+        } else if (extensao === 'doc' || extensao === 'docx') {
+          item.pdfs.push(nome);
+          totalPDFs++;
+          if (!item.tituloPDF) item.tituloPDF = tituloArquivo;
+        } else {
+          item.audios.push(nome);
+          totalAudios++;
+          if (!item.tituloAudio) item.tituloAudio = tituloArquivo;
+        }
       }
 
       let pares = 0;
       let semAudio = 0;
-      let semPDF = 0;
+      let semCifra = 0;
       let detalhes = [];
 
       for (const [numero, item] of grupos.entries()) {
         const titulo = item.tituloAudio || item.tituloPDF || 'SEM TÍTULO';
 
-        if (
-          item.audios.length > 1 ||
-          item.pdfs.length > 1 ||
-          item.partituras.length > 1
-        ) {
+        if (item.audios.length > 1 || item.pdfs.length > 1 || item.partituras.length > 1) {
           detalhes.push(
             `Nº ${numero} - DUPLICIDADE: CONFERIR MANUALMENTE\n` +
             `Título: ${titulo}\n` +
             `Áudios: ${item.audios.join(', ') || 'Nenhum'}\n` +
-            `Cifras: ${item.pdfs.join(', ') || 'Nenhuma'}\n` +
-            `Partituras: ${item.partituras.join(', ') || 'Nenhuma'}`
+            `Cifras Word: ${item.pdfs.join(', ') || 'Nenhuma'}\n` +
+            `Partituras PDF: ${item.partituras.join(', ') || 'Nenhuma'}`
           );
         } else if (item.audios.length === 1 && item.pdfs.length === 1) {
           pares++;
-
           detalhes.push(
-            `Nº ${numero} - ${titulo} - PAR ENCONTRADO\n` +
+            `Nº ${numero} - ${titulo} - ÁUDIO + CIFRA ENCONTRADOS\n` +
             `Áudio: ${item.audios[0]}\n` +
-            `PDF: ${item.pdfs[0]}` +
-            (item.partituras.length
-              ? `\nPartitura: ${item.partituras[0]}`
-              : '')
+            `Cifra Word: ${item.pdfs[0]}` +
+            (item.partituras.length ? `\nPartitura PDF: ${item.partituras[0]}` : '')
           );
         } else if (item.pdfs.length === 1) {
           semAudio++;
-
           detalhes.push(
-            `Nº ${numero} - ${titulo} - PDF SEM ÁUDIO\n` +
-            `PDF: ${item.pdfs[0]}`
+            `Nº ${numero} - ${titulo} - CIFRA SEM ÁUDIO\n` +
+            `Cifra Word: ${item.pdfs[0]}` +
+            (item.partituras.length ? `\nPartitura PDF: ${item.partituras[0]}` : '')
           );
         } else if (item.audios.length === 1) {
-          semPDF++;
-
+          semCifra++;
           detalhes.push(
-            `Nº ${numero} - ${titulo} - ÁUDIO SEM PDF\n` +
-            `Áudio: ${item.audios[0]}`
+            `Nº ${numero} - ${titulo} - ÁUDIO SEM CIFRA\n` +
+            `Áudio: ${item.audios[0]}` +
+            (item.partituras.length ? `\nPartitura PDF: ${item.partituras[0]}` : '')
           );
         } else if (item.partituras.length === 1) {
           detalhes.push(
-            `Nº ${numero} - ${titulo} - SOMENTE PARTITURA\n` +
+            `Nº ${numero} - ${titulo} - SOMENTE PARTITURA PDF\n` +
             `Partitura: ${item.partituras[0]}`
           );
         }
@@ -747,9 +731,9 @@ if (extensao === 'pdf') {
         `${zip.name}\n` +
         `Momento identificado: ${identificarMomento(zip.name)}\n` +
         `Músicas identificadas: ${grupos.size}\n` +
-        `Pares de áudio e cifra: ${pares}\n` +
+        `Pares de áudio e cifra Word: ${pares}\n` +
         `Cifras sem áudio: ${semAudio}\n` +
-        `Áudios sem cifra: ${semPDF}\n\n` +
+        `Áudios sem cifra: ${semCifra}\n\n` +
         detalhes.join('\n\n')
       );
 
@@ -762,6 +746,7 @@ if (extensao === 'pdf') {
     relatorio.join('\n\n') +
     `\n\nTOTAL DE PARES: ${totalPares}` +
     `\nTOTAL DE ÁUDIOS: ${totalAudios}` +
-    `\nTOTAL DE CIFRAS (PDF): ${totalPDFs}` +
-    `\nTOTAL DE PARTITURAS: ${totalPartituras}`;
+    `\nTOTAL DE CIFRAS WORD: ${totalPDFs}` +
+    `\nTOTAL DE PARTITURAS PDF: ${totalPartituras}`;
 });
+
