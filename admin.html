@@ -36,6 +36,20 @@
 <p class="ajuda">Para substituir um arquivo, envie o novo. Para retirar um arquivo da música, limpe o link correspondente. Os arquivos e textos publicados ficam disponíveis a todos os visitantes.</p>
 <div class="botoes"><button class="btn" id="salvar">Salvar e publicar</button><button class="btn secondary" type="button" id="cancelar">Limpar edição</button><button class="btn perigo" type="button" id="excluir" hidden>Excluir música</button></div>
 </form></div></div>
+  <div class="panel" id="importar-musicas">
+  <h2>Importar músicas em lote</h2>
+  <p>Selecione os arquivos ZIP com cifras e áudios para cadastrar várias músicas de uma só vez.</p>
+
+  <label>Arquivos ZIP
+    <input id="arquivos-zip" type="file" accept=".zip,application/zip" multiple>
+  </label>
+
+  <button class="btn" type="button" id="analisar-zip">
+    Analisar arquivos ZIP
+  </button>
+
+  <div id="resultado-importacao"></div>
+</div>
 </section>
 <noscript>Ative o JavaScript para entrar e editar as músicas.</noscript>
   <section class="panel" id="personalizar-site" hidden>
