@@ -608,7 +608,7 @@ const arquivos = document.getElementById('arquivos-zip').files;
           continue;
         }
 
-       const correspondencia = nome.match(/^\s*(\d+)/);
+     const correspondencia = nome.match(/(\d+)/);
 
 if (!correspondencia) continue;
 
