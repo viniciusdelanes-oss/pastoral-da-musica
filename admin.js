@@ -631,11 +631,20 @@ if (extensao === 'pdf') {
       let semAudio = 0;
       let semPDF = 0;
 
-      for (const item of grupos.values()) {
-        if (item.audio && item.pdf) pares++;
-        else if (item.pdf) semAudio++;
-        else if (item.audio) semPDF++;
-      }
+     let detalhes = [];
+
+for (const [numero, item] of grupos.entries()) {
+  if (item.audio && item.pdf) {
+    pares++;
+    detalhes.push(`Nº ${numero} - PAR ENCONTRADO\nÁudio: ${item.audio}\nPDF: ${item.pdf}`);
+  } else if (item.pdf) {
+    semAudio++;
+    detalhes.push(`Nº ${numero} - PDF SEM ÁUDIO\nPDF: ${item.pdf}`);
+  } else if (item.audio) {
+    semPDF++;
+    detalhes.push(`Nº ${numero} - ÁUDIO SEM PDF\nÁudio: ${item.audio}`);
+  }
+}
 
       totalPares += pares;
 
