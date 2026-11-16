@@ -210,12 +210,13 @@ document.getElementById('busca').addEventListener('input',()=>{pararPlayers();de
 
 desenharLista();desenharRepertorio();desenharBiblioteca();
  const containerNoticias = document.getElementById('noticias-container');
+ const listaNoticias = Array.isArray(noticias) ? noticias : [];
 
 if(containerNoticias){
-  if(!noticias || noticias.length === 0){
+  if(listaNoticias.length === 0){
     containerNoticias.innerHTML = '<p>Nenhuma notícia publicada no momento.</p>';
   } else {
-    containerNoticias.innerHTML = noticias.map(n => `
+    containerNoticias.innerHTML = listaNoticias.map(n => `
       <article style="padding:16px 0;border-bottom:1px solid var(--border)">
         <h3>${n.titulo || 'Sem título'}</h3>
         <p>${n.resumo || n.conteudo || ''}</p>
