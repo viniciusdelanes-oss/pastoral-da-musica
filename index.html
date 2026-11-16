@@ -232,6 +232,7 @@ async function carregarConteudoOnline(){
 
     if(erroCelebracoes) throw erroCelebracoes;
     if(erroMusicas) throw erroMusicas;
+   if(erroNoticias) throw erroNoticias;
 
     const rows = (celebracoes || []).map(r => ({
       ...r,
