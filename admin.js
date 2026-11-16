@@ -339,6 +339,36 @@ $('abrir-noticias').onclick = () => {
 // PERSONALIZAÇÃO DO SITE
 
 const formSite = $('form-site');
+async function enviarImagens(formulario) {
+  for (const input of formulario.querySelectorAll('input[type="file"][data-upload]')) {
+    const file = input.files[0];
+    if (!file) continue;
+
+    if (!file.type.startsWith('image/')) {
+      throw new Error('Selecione um arquivo de imagem válido.');
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      throw new Error('A imagem deve ter no máximo 5 MB.');
+    }
+
+    const extensao = file.name.split('.').pop().toLowerCase();
+    const caminho = `${crypto.randomUUID()}.${extensao}`;
+
+    const { error } = await supabase.storage
+      .from('site-assets')
+      .upload(caminho, file);
+
+    if (error) throw error;
+
+    const { data } = supabase.storage
+      .from('site-assets')
+      .getPublicUrl(caminho);
+
+    formulario.elements[input.dataset.upload].value = data.publicUrl;
+    input.value = '';
+  }
+}
 let configuracaoSiteId = null;
 
 async function carregarPersonalizacao() {
@@ -365,7 +395,7 @@ formSite.onsubmit = e => {
 
   run(async () => {
     message('Salvando personalizações…');
-
+await enviarImagens(formSite);
     const valores = Object.fromEntries(new FormData(formSite));
 
     let resultado;
@@ -443,6 +473,7 @@ formNoticia.onsubmit = e => {
   e.preventDefault();
 
   run(async () => {
+    await enviarImagens(formNoticia);
     const body = Object.fromEntries(new FormData(formNoticia));
 
     const registro = {
